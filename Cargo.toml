@@ -12,6 +12,7 @@ repository = "https://github.com/Phoenix-Protocol-Group/phoenix-contracts"
 curve = { path = "./packages/curve"}
 decimal = { path = "./packages/decimal"}
 phoenix = { path = "./packages/phoenix"}
+access-control-macros = { path = "./packages/access-control-macros" }
 num-integer = { version = "0.1.45", default-features = false, features = ["i128"] }
 soroban-sdk = "20.0.0-rc2"
 soroban-token-sdk = "20.0.0-rc2"

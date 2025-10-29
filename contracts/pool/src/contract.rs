@@ -21,6 +21,8 @@ use phoenix::{
     validate_int_parameters,
 };
 
+use access_control_macros::{access_control, no_access_control, authorized_by};
+
 // Metadata that is added on to the WASM custom section
 contractmeta!(
     key = "Description",
@@ -127,9 +129,11 @@ pub trait LiquidityPoolTrait {
     ) -> SimulateReverseSwapResponse;
 }
 
+#[access_control]
 #[contractimpl]
 impl LiquidityPoolTrait for LiquidityPool {
     #[allow(clippy::too_many_arguments)]
+    #[no_access_control]
     fn initialize(
         env: Env,
         admin: Address,
@@ -219,6 +223,7 @@ impl LiquidityPoolTrait for LiquidityPool {
             .publish(("initialize", "XYK LP token_b"), token_b);
     }
 
+    #[no_access_control]
     fn provide_liquidity(
         env: Env,
         sender: Address,
@@ -359,6 +364,7 @@ impl LiquidityPoolTrait for LiquidityPool {
             .publish(("provide_liquidity", "token_b-amount"), amounts.1);
     }
 
+    #[no_access_control]
     fn swap(
         env: Env,
         sender: Address,
@@ -383,6 +389,7 @@ impl LiquidityPoolTrait for LiquidityPool {
         )
     }
 
+    #[no_access_control]
     fn withdraw_liquidity(
         env: Env,
         sender: Address,
@@ -454,6 +461,7 @@ impl LiquidityPoolTrait for LiquidityPool {
         (return_amount_a, return_amount_b)
     }
 
+    #[no_access_control]
     fn update_config(
         env: Env,
         sender: Address,
@@ -491,6 +499,7 @@ impl LiquidityPoolTrait for LiquidityPool {
         save_config(&env, config);
     }
 
+    #[no_access_control]
     fn upgrade(env: Env, new_wasm_hash: BytesN<32>) {
         let admin: Address = utils::get_admin(&env);
         admin.require_auth();
@@ -499,19 +508,22 @@ impl LiquidityPoolTrait for LiquidityPool {
     }
 
     // Queries
-
+    #[no_access_control]
     fn query_config(env: Env) -> Config {
         get_config(&env)
     }
 
+    #[no_access_control]
     fn query_share_token_address(env: Env) -> Address {
         get_config(&env).share_token
     }
 
+    #[no_access_control]
     fn query_stake_contract_address(env: Env) -> Address {
         get_config(&env).stake_contract
     }
 
+    #[no_access_control]
     fn query_pool_info(env: Env) -> PoolResponse {
         let config = get_config(&env);
 
@@ -531,6 +543,7 @@ impl LiquidityPoolTrait for LiquidityPool {
         }
     }
 
+    #[no_access_control]
     fn query_pool_info_for_factory(env: Env) -> LiquidityPoolInfo {
         let config = get_config(&env);
         let pool_response = PoolResponse {
@@ -556,6 +569,7 @@ impl LiquidityPoolTrait for LiquidityPool {
         }
     }
 
+    #[no_access_control]
     fn simulate_swap(env: Env, offer_asset: Address, offer_amount: i128) -> SimulateSwapResponse {
         let config = get_config(&env);
 
@@ -587,6 +601,7 @@ impl LiquidityPoolTrait for LiquidityPool {
         }
     }
 
+    #[no_access_control]
     fn simulate_reverse_swap(
         env: Env,
         ask_asset: Address,
