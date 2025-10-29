@@ -48,7 +48,7 @@ pub trait LiquidityPoolTrait {
         token_init_info: TokenInitInfo,
         stake_contract_info: StakeInitInfo,
     );
-
+    
     // Deposits token_a and token_b. Also mints pool shares for the "to" Identifier. The amount minted
     // is determined based on the difference between the reserves stored by this contract, and
     // the actual balance of token_a and token_b for this contract.
@@ -127,6 +127,13 @@ pub trait LiquidityPoolTrait {
         ask_asset: Address,
         ask_amount: i128,
     ) -> SimulateReverseSwapResponse;
+}
+
+impl LiquidityPool {
+    // predicate used by #[authorized_by(sender, is_owner)]
+    fn is_owner(env: &soroban_sdk::Env, sender: &soroban_sdk::Address) -> bool {
+        sender == &utils::get_admin(env)
+    }
 }
 
 #[access_control]
@@ -461,7 +468,7 @@ impl LiquidityPoolTrait for LiquidityPool {
         (return_amount_a, return_amount_b)
     }
 
-    #[no_access_control]
+    #[authorized_by(sender, is_owner)]
     fn update_config(
         env: Env,
         sender: Address,
